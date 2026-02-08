@@ -51,7 +51,7 @@ abstract class AbstractTaggable implements TaggableInterface
 
     public function getTagNames(): array
     {
-        return empty($this->tagsText) ? [] : \array_map('trim', \explode(',', $this->tagsText));
+        return empty($this->tagsText) ? [] : \array_map(trim(...), \explode(',', $this->tagsText));
     }
 
     /**

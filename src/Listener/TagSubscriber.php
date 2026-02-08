@@ -38,7 +38,7 @@ final class TagSubscriber implements EventSubscriber
      * @throws MappingException
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $tagClassName, private bool $purge = false)
+    public function __construct(string $tagClassName, private readonly bool $purge = false)
     {
         if (!\class_exists($tagClassName)) {
             if (\class_exists('Doctrine\Common\Persistence\Mapping\MappingException')) {
