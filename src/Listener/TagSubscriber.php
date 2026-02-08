@@ -8,6 +8,8 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\MappingException as LegacyMappingException;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Persistence\Mapping\MappingException;
+use Doctrine\ORM\UnitOfWork;
+use Doctring\ORM\EntityManager;
 
 /**
  * Add tags to entities that implements TaggableInterface.
@@ -15,12 +17,12 @@ use Doctrine\Persistence\Mapping\MappingException;
 final class TagSubscriber implements EventSubscriber
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $manager;
 
     /**
-     * @var \Doctrine\ORM\UnitOfWork
+     * @var UnitOfWork
      */
     private $uow;
 
@@ -29,10 +31,6 @@ final class TagSubscriber implements EventSubscriber
      */
     private $tag;
 
-    /**
-     * @var bool
-     */
-    private $purge;
 
     /**
      * @param bool $purge whether to delete tags when entity is deleted
@@ -40,7 +38,7 @@ final class TagSubscriber implements EventSubscriber
      * @throws MappingException
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $tagClassName, bool $purge = false)
+    public function __construct(string $tagClassName, private bool $purge = false)
     {
         if (!\class_exists($tagClassName)) {
             if (\class_exists('Doctrine\Common\Persistence\Mapping\MappingException')) {
@@ -52,7 +50,6 @@ final class TagSubscriber implements EventSubscriber
         if (!$this->tag instanceof TagInterface) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" must implement TagInterface.', $tagClassName));
         }
-        $this->purge = $purge;
     }
 
     public function getSubscribedEvents(): array
@@ -100,8 +97,8 @@ final class TagSubscriber implements EventSubscriber
         }
         // need to clone here, to avoid getting new tags
         $oldTags = \is_object($entityTags = $entity->getTags()) ? clone $entityTags : $entityTags;
-        $tagClassMetadata = $this->manager->getClassMetadata(\get_class($this->tag));
-        $repository = $this->manager->getRepository(\get_class($this->tag));
+        $tagClassMetadata = $this->manager->getClassMetadata($this->tag::class);
+        $repository = $this->manager->getRepository($this->tag::class);
         foreach ($tagNames as $tagName) {
             $tag = $repository->findOneByName($tagName);
             if (empty($tag)) {
@@ -126,8 +123,11 @@ final class TagSubscriber implements EventSubscriber
             }
         }
         // see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#onflush
-        $entityClassMetadata = $this->manager->getClassMetadata(\get_class($entity));
-        $this->uow->computeChangeSets($entityClassMetadata, $entity);
+        $entityClassMetadata = $this->manager->getClassMetadata($entity::class);
+        // NB This *used* to be $this->uow->computeChangeSets($entityClassMetadata, $entity);
+        // which erroenously calls the parameter-free computeChangeSets() method instead of
+        // computeChangeSet($class, $entity). I don't know what "fixing" this might break.
+        $this->uow->computeChangeSet($entityClassMetadata, $entity);
     }
 
     /**
