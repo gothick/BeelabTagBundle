@@ -24,7 +24,7 @@ return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_83)
     ->withSets([
         LevelSetList::UP_TO_PHP_80,
-        #LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_81,
         #LevelSetList::UP_TO_PHP_82,
         #LevelSetList::UP_TO_PHP_83,
         #SymfonySetList::SYMFONY_50,
