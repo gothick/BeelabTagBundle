@@ -44,8 +44,10 @@ final class TagSubscriber implements EventSubscriber
             if (\class_exists('Doctrine\Common\Persistence\Mapping\MappingException')) {
                 throw LegacyMappingException::nonExistingClass($tagClassName);
             }
+
             throw MappingException::nonExistingClass($tagClassName);
         }
+
         $this->tag = new $tagClassName();
         if (!$this->tag instanceof TagInterface) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" must implement TagInterface.', $tagClassName));
@@ -63,20 +65,22 @@ final class TagSubscriber implements EventSubscriber
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
-        $this->manager = $args->getEntityManager();
+        $this->manager = $args->getObjectManager();
         $this->uow = $this->manager->getUnitOfWork();
         foreach ($this->uow->getScheduledEntityInsertions() as $key => $entity) {
             if ($entity instanceof TaggableInterface) {
                 $this->setTags($entity, false);
             }
         }
-        foreach ($this->uow->getScheduledEntityUpdates() as $key => $entity) {
+
+        foreach ($this->uow->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof TaggableInterface) {
                 $this->setTags($entity, true);
             }
         }
+
         if ($this->purge) {
-            foreach ($this->uow->getScheduledEntityDeletions() as $key => $entity) {
+            foreach ($this->uow->getScheduledEntityDeletions() as $entity) {
                 if ($entity instanceof TaggableInterface) {
                     $this->purgeTags($entity);
                 }
@@ -92,9 +96,10 @@ final class TagSubscriber implements EventSubscriber
     private function setTags(TaggableInterface $entity, bool $update = false): void
     {
         $tagNames = $entity->getTagNames();
-        if (empty($tagNames) && !$update) {
+        if ($tagNames === [] && !$update) {
             return;
         }
+
         // need to clone here, to avoid getting new tags
         $oldTags = \is_object($entityTags = $entity->getTags()) ? clone $entityTags : $entityTags;
         $tagClassMetadata = $this->manager->getClassMetadata($this->tag::class);
@@ -109,11 +114,13 @@ final class TagSubscriber implements EventSubscriber
                 // see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#onflush
                 $this->uow->computeChangeSet($tagClassMetadata, $tag);
             }
+
             if (!$entity->hasTag($tag)) {
                 // add tag only if not already added
                 $entity->addTag($tag);
             }
         }
+
         // if updating, need to check if some tags were removed
         if ($update) {
             foreach ($oldTags as $oldTag) {
@@ -122,6 +129,7 @@ final class TagSubscriber implements EventSubscriber
                 }
             }
         }
+
         // see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#onflush
         $entityClassMetadata = $this->manager->getClassMetadata($entity::class);
         // NB This *used* to be $this->uow->computeChangeSets($entityClassMetadata, $entity);

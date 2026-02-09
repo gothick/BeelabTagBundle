@@ -56,7 +56,7 @@ final class TagSubscriberTest extends TestCase
         $uow = $this->getMockBuilder(\Doctrine\ORM\UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $metadata = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->once())->method('getEntityManager')->willReturn($manager);
+        $args->expects($this->once())->method('getObjectManager')->willReturn($manager);
         $manager->expects($this->once())->method('getUnitOfWork')->willReturn($uow);
         $manager->expects($this->any())->method('getRepository')->willReturn($repo);
         $manager->expects($this->any())->method('getClassMetadata')->willReturn($metadata);
@@ -85,7 +85,7 @@ final class TagSubscriberTest extends TestCase
         $uow = $this->getMockBuilder(\Doctrine\ORM\UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $metadata = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->once())->method('getEntityManager')->willReturn($manager);
+        $args->expects($this->once())->method('getObjectManager')->willReturn($manager);
         $manager->expects($this->once())->method('getUnitOfWork')->willReturn($uow);
         $manager->expects($this->any())->method('getClassMetadata')->willReturn($metadata);
         $uow
@@ -113,7 +113,7 @@ final class TagSubscriberTest extends TestCase
         $uow = $this->getMockBuilder(\Doctrine\ORM\UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $metadata = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->once())->method('getEntityManager')->willReturn($manager);
+        $args->expects($this->once())->method('getObjectManager')->willReturn($manager);
         $manager->expects($this->once())->method('getUnitOfWork')->willReturn($uow);
         $manager->expects($this->any())->method('getClassMetadata')->willReturn($metadata);
         $uow
@@ -140,7 +140,7 @@ final class TagSubscriberTest extends TestCase
         $manager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $uow = $this->getMockBuilder(\Doctrine\ORM\UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->once())->method('getEntityManager')->willReturn($manager);
+        $args->expects($this->once())->method('getObjectManager')->willReturn($manager);
         $manager->expects($this->once())->method('getUnitOfWork')->willReturn($uow);
         $uow->expects($this->once())->method('getScheduledEntityInsertions')->willReturn([]);
         $uow->expects($this->once())->method('getScheduledEntityUpdates')->willReturn([]);
@@ -162,7 +162,7 @@ final class TagSubscriberTest extends TestCase
         $manager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $uow = $this->getMockBuilder(\Doctrine\ORM\UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->once())->method('getEntityManager')->willReturn($manager);
+        $args->expects($this->once())->method('getObjectManager')->willReturn($manager);
         $manager->expects($this->once())->method('getUnitOfWork')->willReturn($uow);
         // TODO create some stubs of taggable entities and non-taggable entities...
         $uow->expects($this->once())->method('getScheduledEntityInsertions')->willReturn([$tag]);
