@@ -9,7 +9,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException as LegacyMappingExcepti
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Persistence\Mapping\MappingException;
 use Doctrine\ORM\UnitOfWork;
-use Doctring\ORM\EntityManager;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Add tags to entities that implements TaggableInterface.
