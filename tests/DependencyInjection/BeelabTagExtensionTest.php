@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Beelab\TagBundle\Tests\DependencyInjection;
 
 use Beelab\TagBundle\DependencyInjection\BeelabTagExtension;
@@ -12,13 +14,13 @@ final class BeelabTagExtensionTest extends TestCase
     public function testLoadSetParameters(): void
     {
         /** @var ContainerBuilder&\PHPUnit\Framework\MockObject\MockObject $container */
-        $container = $this->getMockBuilder(ContainerBuilder::class)->disableOriginalConstructor()->getMock();
+        $container = $this->createMock(ContainerBuilder::class);
         /** @var ParameterBag&\PHPUnit\Framework\MockObject\MockObject $parameterBag */
-        $parameterBag = $this->getMockBuilder(ParameterBag::class)->disableOriginalConstructor()->getMock();
+        $parameterBag = $this->createMock(ParameterBag::class);
 
-        $parameterBag->expects($this->any())->method('add');
+        $parameterBag->method('add');
 
-        $container->expects($this->any())->method('getParameterBag')->willReturn($parameterBag);
+        $container->method('getParameterBag')->willReturn($parameterBag);
 
         $extension = new BeelabTagExtension();
         $configs = [
