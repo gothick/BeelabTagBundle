@@ -21,7 +21,7 @@ final class BeelabTagExtension extends Extension
         $container->setParameter('beelab_tag.tag_class', $config['tag_class']);
         $container->setParameter('beelab_tag.purge', $config['purge']);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
-        $loader->load('services.xml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+        $loader->load('services.yaml');
     }
 }

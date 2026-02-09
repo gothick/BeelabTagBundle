@@ -1,0 +1,14 @@
+services:
+    beelab.tag.subscriber:
+        class: Beelab\TagBundle\Listener\TagSubscriber
+        public: false
+        arguments:
+            - "%beelab_tag.tag_class%"
+            - "%beelab_tag.purge%"
+        tags:
+            - {
+                  name: doctrine.event_listener,
+                  priority: 10,
+                  event: onFlush,
+                  lazy: true,
+              }
