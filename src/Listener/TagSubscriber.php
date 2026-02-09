@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Add tags to entities that implements TaggableInterface.
  */
-final class TagSubscriber implements EventSubscriber
+final class TagSubscriber
 {
     /**
      * @var EntityManager
@@ -52,11 +52,6 @@ final class TagSubscriber implements EventSubscriber
         if (!$this->tag instanceof TagInterface) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" must implement TagInterface.', $tagClassName));
         }
-    }
-
-    public function getSubscribedEvents(): array
-    {
-        return ['onFlush'];
     }
 
     /**

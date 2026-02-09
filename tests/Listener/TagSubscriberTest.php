@@ -38,14 +38,6 @@ final class TagSubscriberTest extends TestCase
         new TagSubscriber(NonTaggableStub::class);
     }
 
-    public function testGetSubscribedEvents(): void
-    {
-        $tag = $this->createStub(\Beelab\TagBundle\Tag\TagInterface::class);
-        $subscriber = new TagSubscriber($tag::class);
-
-        $this->assertContains('onFlush', $subscriber->getSubscribedEvents());
-    }
-
     public function testOnFlush(): void
     {
         $tag = $this->createStub(\Beelab\TagBundle\Tag\TagInterface::class);
