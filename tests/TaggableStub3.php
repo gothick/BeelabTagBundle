@@ -7,6 +7,7 @@ namespace Beelab\TagBundle\Tests;
  */
 class TaggableStub3 extends TaggableStub
 {
+    #[\Override]
     public function getTagNames(): array
     {
         return [];

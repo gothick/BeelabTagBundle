@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Beelab\TagBundle\Tests\Entity;
 
 use Beelab\TagBundle\Tag\TagInterface;
 use Beelab\TagBundle\Tests\Entity;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group unit
- */
+#[\PHPUnit\Framework\Attributes\Group('unit')]
 final class AbstractTaggableTest extends TestCase
 {
     public function testHasTag(): void
     {
         /** @var TagInterface&\PHPUnit\Framework\MockObject\MockObject $tag */
-        $tag = $this->createMock(TagInterface::class);
+        $tag = $this->createStub(TagInterface::class);
         $entity = new Entity();
         $entity->addTag($tag);
         $this->assertTrue($entity->hasTag($tag));
@@ -23,7 +23,7 @@ final class AbstractTaggableTest extends TestCase
     public function testRemoveTag(): void
     {
         /** @var TagInterface&\PHPUnit\Framework\MockObject\MockObject $tag */
-        $tag = $this->createMock(TagInterface::class);
+        $tag = $this->createStub(TagInterface::class);
         $entity = new Entity();
         $entity->addTag($tag);
         $entity->removeTag($tag);
@@ -33,7 +33,7 @@ final class AbstractTaggableTest extends TestCase
     public function testGetTags(): void
     {
         /** @var TagInterface&\PHPUnit\Framework\MockObject\MockObject $tag */
-        $tag = $this->createMock(TagInterface::class);
+        $tag = $this->createStub(TagInterface::class);
         $entity = new Entity();
         $entity->addTag($tag);
         $this->assertCount(1, $entity->getTags());
@@ -41,18 +41,14 @@ final class AbstractTaggableTest extends TestCase
 
     public function testGetTagsText(): void
     {
-        /** @var TagInterface&\PHPUnit\Framework\MockObject\MockObject $tag */
-        $tag = $this->createMock(TagInterface::class);
         $entity = new Entity();
         $entity->setTagsText('foo, bar, baz');
-        $this->assertEquals('', $entity->getTagsText());
+        $this->assertSame('', $entity->getTagsText());
     }
 
     public function testGetTagNames(): void
     {
-        /** @var TagInterface&\PHPUnit\Framework\MockObject\MockObject $tag */
-        $tag = $this->createMock(TagInterface::class);
         $entity = new Entity();
-        $this->assertEquals([], $entity->getTagNames());
+        $this->assertSame([], $entity->getTagNames());
     }
 }

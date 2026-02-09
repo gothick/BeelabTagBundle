@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Beelab\TagBundle\Tests\DependencyInjection;
 
 use Beelab\TagBundle\DependencyInjection\Configuration;
