@@ -67,7 +67,7 @@ final class TagSubscriber implements EventSubscriber
     {
         $this->manager = $args->getObjectManager();
         $this->uow = $this->manager->getUnitOfWork();
-        foreach ($this->uow->getScheduledEntityInsertions() as $key => $entity) {
+        foreach ($this->uow->getScheduledEntityInsertions() as $entity) {
             if ($entity instanceof TaggableInterface) {
                 $this->setTags($entity, false);
             }
